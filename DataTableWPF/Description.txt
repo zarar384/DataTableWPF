@@ -1,0 +1,20 @@
+﻿[A task to test knowledge]
+
+Vytvořte WPF aplikaci, která je přes Entity Framework připojena k MSSQL DB (stačí LocalDB) a umožňuje správu adresáře kontaktů.
+Tj. přidat, editovat a vymazat kontakt.
+
+Položka adresáře se skládá z:
+Name
+Surname
+Phone
+E-Mail
+ 
+
+Použijte tyto technologie:
+.NET 6
+WPF aplikace
+Entity Framework 6 s MS SQL (využít LocalDB)
+ 
+
+Nějaké info lze čerpat např. z https://docs.microsoft.com/en-us/visualstudio/data-tools/create-a-simple-data-application-with-wpf-and-entity-framework-6?view=vs-2022
+Případně pak spoustu dalších zdrojů na Internetu pro Entity Framework 6 s WPF.
