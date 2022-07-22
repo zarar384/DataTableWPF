@@ -15,6 +15,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
+using System.Data.Entity.Validation;
 
 namespace DataTableWPF
 {
@@ -30,7 +32,7 @@ namespace DataTableWPF
 
             db = new AppDbContext();
             db.Persons.Load();
-            personGrin.ItemsSource = db.Persons.Local.ToBindingList();
+            personDataGrid.ItemsSource = db.Persons.Local.ToBindingList();
 
             this.Closing += MainWindow_Closing;
         }
@@ -39,14 +41,14 @@ namespace DataTableWPF
         {
             db.Dispose();
         }
-
-        private void addBtn_Click(object sender, RoutedEventArgs e)
+        //Table Tab
+        private void addBtnTbl_Click(object sender, RoutedEventArgs e)
         {
-            if (personGrin.IsVisible)
+            if (personDataGrid.IsVisible)
             {
-                for (int i = 0; i < personGrin.SelectedItems.Count; i++)
+                for (int i = 0; i < personDataGrid.SelectedItems.Count; i++)
                 {
-                    Person person = personGrin.SelectedItems[i] as Person;
+                    Person person = personDataGrid.SelectedItems[i] as Person;
                     if (person != null)
                     {
                         db.Persons.Add(person);
@@ -56,25 +58,108 @@ namespace DataTableWPF
             db.SaveChanges();
         }
 
-        private void updBtn_Click(object sender, RoutedEventArgs e)
+        private int updPersonId = 0;
+        private void updBtnTbl_Click(object sender, RoutedEventArgs e)
         {
-            db.SaveChanges();
+            personTabControl.SelectedValue = personTab;
+
+            for (int i = 0; i < personDataGrid.SelectedItems.Count; i++)
+            {
+                Person person = personDataGrid.SelectedItems[i] as Person;
+                if (person != null)
+                {
+                    add_personNameTextBox.Text = person.Name;
+                    add_personSurnameTextBox.Text = person.Surname;
+                    add_personMailTextBox.Text = person.Email;
+                    add_personPhoneTextBox.Text = person.Phone.ToString();
+
+                    this.updPersonId = person.Id;
+                }
+            }
         }
 
-        private void delBtn_Click(object sender, RoutedEventArgs e)
+        private void delBtnTbl_Click(object sender, RoutedEventArgs e)
         {
-            if (personGrin.SelectedItems.Count > 0)
+            if (personDataGrid.SelectedItems.Count > 0)
             {
-                for (int i = 0; i < personGrin.SelectedItems.Count; i++)
+                for (int i = 0; i < personDataGrid.SelectedItems.Count; i++)
                 {
-                    Person person = personGrin.SelectedItems[i] as Person;
+                    Person person = personDataGrid.SelectedItems[i] as Person;
                     if (person != null)
                     {
                         db.Persons.Remove(person);
                     }
                 }
             }
-            db.SaveChanges();
+        }
+        //Person Tab
+        private void addBtnPrsn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (personGrid.IsVisible)
+                {
+                    Person person = new Person
+                    {
+                        Id = updPersonId,
+                        Name = add_personNameTextBox.Text,
+                        Surname = add_personSurnameTextBox.Text,
+                        Phone = int.Parse(add_personPhoneTextBox.Text),
+                        Email = add_personMailTextBox.Text,
+                    };
+                    if (person.Id == 0)
+                    {
+                        db.Persons.Add(person);
+                    }
+                    else if (person.Id > 0)
+                    {
+                        var updId = from p in db.Persons
+                                    where p.Id == this.updPersonId
+                                    select p;
+                        person = updId.SingleOrDefault();
+                        if (person != null)
+                        {
+                            person.Name = this.add_personNameTextBox.Text;
+                            person.Surname = this.add_personSurnameTextBox.Text;
+                            person.Phone = int.Parse(this.add_personPhoneTextBox.Text);
+                            person.Email = this.add_personMailTextBox.Text;
+                        }
+                        db.SaveChanges();
+                        personDataGrid.Items.Refresh();
+                        this.updPersonId = 0;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Person.ID Error");
+                    }
+
+                    db.SaveChanges();
+                    add_personNameTextBox.Text = "";
+                    add_personSurnameTextBox.Text = "";
+                    add_personMailTextBox.Text = "";
+                    add_personPhoneTextBox.Text = "";
+                    personTabControl.SelectedValue = dbTableTab;
+                }
+            }
+            catch (DbEntityValidationException ex)
+            {
+                foreach (var eve in ex.EntityValidationErrors)
+                {
+                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                throw ex;
+            }
+        }
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

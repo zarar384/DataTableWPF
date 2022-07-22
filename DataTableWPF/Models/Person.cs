@@ -18,7 +18,6 @@ namespace DataTableWPF.Models
         [Display(Name = "Příjmení")]
         public string Surname { get; set; }
         //without 420
-        [Range(0, 9)]
         [Display(Name = "Telefonní číslo")]
         public int Phone { get; set; }
         [Display(Name = "E-Mail")]

@@ -3,29 +3,81 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DataTableWPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="460">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
-        <DataGrid AutoGenerateColumns="False" x:Name="personGrin">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="Jmeno" Width="100"/>
-                <DataGridTextColumn Binding="{Binding Surname}" Header="Příjmení" Width="100"/>
-                <DataGridTextColumn Binding="{Binding Phone}" Header="Telefonní číslo" Width="130"/>
-                <DataGridTextColumn Binding="{Binding Email}" Header="E-Mail" Width="130"/>
-            </DataGrid.Columns>
-        </DataGrid>
+    <TabControl x:Name="personTabControl">
+        <TabItem x:Name="dbTableTab">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Height="10" Width="10" Fill="Black" />
+                    <TextBlock Margin="3">Table</TextBlock>
+                </StackPanel>
+            </TabItem.Header>
+            <TabItem.Content>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <DataGrid AutoGenerateColumns="False" x:Name="personDataGrid" Height="380" VerticalAlignment="Top">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Name}" Header="Jmeno" Width="100"/>
+                            <DataGridTextColumn Binding="{Binding Surname}" Header="Příjmení" Width="100"/>
+                            <DataGridTextColumn Binding="{Binding Phone}" Header="Telefonní číslo" Width="130"/>
+                            <DataGridTextColumn Binding="{Binding Email}" Header="E-Mail" Width="130"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
 
-        <StackPanel HorizontalAlignment="Left" Grid.Row="1" Orientation="Horizontal">
-            <Button x:Name="addBtn" Content="Přidat" Click="addBtn_Click"/>
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Right" Grid.Row="1" Orientation="Horizontal">
-            <Button x:Name="updBtn" Content="Editovat " Click="updBtn_Click" />
-            <Button x:Name="delBtn" Content="Vymazat " Click="delBtn_Click"/>
-        </StackPanel>
-    </Grid>
+                    <StackPanel HorizontalAlignment="Left" Grid.Row="1" Orientation="Horizontal">
+                        <Button x:Name="addBtnTbl" Content="Přidat" Click="addBtnTbl_Click"/>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Right" Grid.Row="1" Orientation="Horizontal">
+                        <Button x:Name="updBtnTbl" Content="Editovat " Click="updBtnTbl_Click" />
+                        <Button x:Name="delBtnTbl" Content="Vymazat " Click="delBtnTbl_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem.Content>
+        </TabItem>
+        <TabItem x:Name="personTab">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Height="10" Width="10" Fill="Gray" />
+                    <TextBlock Margin="3">Person</TextBlock>
+                </StackPanel>
+            </TabItem.Header>
+            <TabItem.Content>
+                <Grid x:Name="personGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox x:Name="add_personNameTextBox" Grid.Column="1" Height="30" Margin="0 0 15 0"
+                             Text="{Binding Name, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true }"/>
+                    <TextBox x:Name="add_personSurnameTextBox" Grid.Column="1" Grid.Row="1" Height="30" Margin="0 0 15 0"
+                             Text="{Binding Surname, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true }"/>
+                    <TextBox  x:Name="add_personPhoneTextBox" Grid.Column="1" Grid.Row="2" Height="30" Margin="0 0 15 0" PreviewTextInput="NumberValidationTextBox"
+                             Text="{Binding Phone, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true }"/>
+                    <TextBox x:Name="add_personMailTextBox" Grid.Column="1" Grid.Row="3" Height="30" Margin="0 0 15 0"
+                             Text="{Binding Email, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true }"/>
+                    
+                    <Label Content="Jmeno" Height="30"  HorizontalAlignment="Center"/>
+                    <Label Grid.Row="1" Content="Příjmení" Height="30" HorizontalAlignment="Center" />
+                    <Label Grid.Row="2" Content="Telefonní číslo" Height="30" HorizontalAlignment="Center" />
+                    <Label Grid.Row="3" Content="E-Mail" Height="30" HorizontalAlignment="Center" />
+
+                    <StackPanel HorizontalAlignment="Left" Grid.Column="0" Grid.Row="4" Orientation="Horizontal">
+                        <Button x:Name="addBtnPrsn" Content="Přidat" Click="addBtnPrsn_Click" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem.Content>
+        </TabItem>
+    </TabControl>
 </Window>

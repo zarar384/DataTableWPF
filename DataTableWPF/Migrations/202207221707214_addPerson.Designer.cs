@@ -13,7 +13,7 @@ namespace DataTableWPF.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202207211834474_addPerson"; }
+            get { return "202207221707214_addPerson"; }
         }
         
         string IMigrationMetadata.Source
