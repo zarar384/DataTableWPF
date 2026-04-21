@@ -1,20 +1,28 @@
 ﻿using DataTableWPF.Models;
 using System;
-using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataTableWPF.Data
 {
-    internal class AppDbContext: DbContext
+    internal class AppDbContext : DbContext
     {
-        public AppDbContext() : base("ConnectionStrings:AppDbContext")
-        {
+        public DbSet<Person> Persons { get; set; } = null!;
 
+        public AppDbContext() : base(GetConnectionString())
+        {
         }
 
-        public DbSet<Person> Persons { get; set; }
+        private static string GetConnectionString()
+        {
+            var mode = ConfigurationManager.AppSettings["DbMode"] ?? "LocalDb";
+
+            var conn = ConfigurationManager.ConnectionStrings[mode];
+
+            if (conn == null)
+                throw new Exception($"Connection string '{mode}' not found.");
+
+            return conn.ConnectionString;
+        }
     }
 }

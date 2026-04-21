@@ -19,8 +19,9 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <DataGrid AutoGenerateColumns="False" x:Name="personDataGrid" Height="380" VerticalAlignment="Top">
+                    <DataGrid AutoGenerateColumns="False" x:Name="personDataGrid" Height="380" VerticalAlignment="Top" IsReadOnly="True">
                         <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Id}" Header="ID" Width="50" Visibility="Hidden"/>
                             <DataGridTextColumn Binding="{Binding Name}" Header="Jmeno" Width="100"/>
                             <DataGridTextColumn Binding="{Binding Surname}" Header="Příjmení" Width="100"/>
                             <DataGridTextColumn Binding="{Binding Phone}" Header="Telefonní číslo" Width="130"/>
@@ -29,18 +30,18 @@
                     </DataGrid>
 
                     <StackPanel HorizontalAlignment="Left" Grid.Row="1" Orientation="Horizontal">
-                        <Button x:Name="addBtnTbl" Content="Přidat" Click="addBtnTbl_Click"/>
+                        <Button x:Name="addBtnTbl" Content="Přidat" Click="AddBtnTbl_Click"/>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Right" Grid.Row="1" Orientation="Horizontal">
-                        <Button x:Name="updBtnTbl" Content="Editovat " Click="updBtnTbl_Click" />
-                        <Button x:Name="delBtnTbl" Content="Vymazat " Click="delBtnTbl_Click"/>
+                        <Button x:Name="updBtnTbl" Content="Editovat " Click="UpdBtnTbl_Click" />
+                        <Button x:Name="delBtnTbl" Content="Vymazat " Click="DelBtnTbl_Click"/>
                     </StackPanel>
                 </Grid>
             </TabItem.Content>
         </TabItem>
         <TabItem x:Name="personTab">
             <TabItem.Header>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" MouseDown="AddBtnTbl_Click">
                     <Rectangle Height="10" Width="10" Fill="Gray" />
                     <TextBlock Margin="3">Person</TextBlock>
                 </StackPanel>
@@ -60,21 +61,21 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBox x:Name="add_personNameTextBox" Grid.Column="1" Height="30" Margin="0 0 15 0"
-                             Text="{Binding Name, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true }"/>
+                        Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                     <TextBox x:Name="add_personSurnameTextBox" Grid.Column="1" Grid.Row="1" Height="30" Margin="0 0 15 0"
-                             Text="{Binding Surname, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true }"/>
-                    <TextBox  x:Name="add_personPhoneTextBox" Grid.Column="1" Grid.Row="2" Height="30" Margin="0 0 15 0" PreviewTextInput="NumberValidationTextBox"
-                             Text="{Binding Phone, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true }"/>
+                        Text="{Binding Surname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                    <TextBox x:Name="add_personPhoneTextBox" Grid.Column="1" Grid.Row="2" Height="30" Margin="0 0 15 0" PreviewTextInput="NumberValidationTextBox"
+                        Text="{Binding Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                     <TextBox x:Name="add_personMailTextBox" Grid.Column="1" Grid.Row="3" Height="30" Margin="0 0 15 0"
-                             Text="{Binding Email, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true }"/>
-                    
+                        Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+
                     <Label Content="Jmeno" Height="30"  HorizontalAlignment="Center"/>
                     <Label Grid.Row="1" Content="Příjmení" Height="30" HorizontalAlignment="Center" />
                     <Label Grid.Row="2" Content="Telefonní číslo" Height="30" HorizontalAlignment="Center" />
                     <Label Grid.Row="3" Content="E-Mail" Height="30" HorizontalAlignment="Center" />
 
                     <StackPanel HorizontalAlignment="Left" Grid.Column="0" Grid.Row="4" Orientation="Horizontal">
-                        <Button x:Name="addBtnPrsn" Content="Přidat" Click="addBtnPrsn_Click" VerticalAlignment="Bottom"/>
+                        <Button x:Name="addBtnPrsn" Content="Přidat" Click="AddBtnPrsn_Click" VerticalAlignment="Bottom"/>
                     </StackPanel>
                 </Grid>
             </TabItem.Content>
